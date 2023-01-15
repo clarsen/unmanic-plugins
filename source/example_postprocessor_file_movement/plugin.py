@@ -28,7 +28,7 @@ def add_path_to_unmanic_ignore_file(path):
     if not exists_in_file:
         # Append the basename to the file
         with open(unmanic_ignore_file, 'a') as outfile:
-            outfile.write("{}\n".format(basename))
+            outfile.write(f"{basename}\n")
 
 
 def on_postprocessor_file_movement(data):
@@ -51,7 +51,7 @@ def on_postprocessor_file_movement(data):
 
     # Add an 'UNMANIC tag to the end of the file'
     tmp_file_out = os.path.splitext(data['file_out'])
-    data['file_out'] = "{}-{}{}".format(tmp_file_out[0], 'UNMANIC', tmp_file_out[1])
+    data['file_out'] = f"{tmp_file_out[0]}-UNMANIC{tmp_file_out[1]}"
 
     # Add original file's name to '.unmanicignore' file to prevent this directory being added again.
     if data['source_data'].get('abspath'):

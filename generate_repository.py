@@ -26,7 +26,15 @@ def install_requirements(package):
         print('      - no requirements.txt file found')
         return
 
-    pip.main(['install', '--upgrade', '-r', requirements_file, '--target={}'.format(install_target)])
+    pip.main(
+        [
+            'install',
+            '--upgrade',
+            '-r',
+            requirements_file,
+            f'--target={install_target}',
+        ]
+    )
 
 
 print("-----------------------------------------------------------------------------")
@@ -52,34 +60,34 @@ for item in os.listdir(repo_source_path):
 
         # Set destination data
         dest_dir = os.path.join(repo_dest_path, item)
-        plugin_zip_file = "{}-{}.zip".format(item, plugin_info.get('version'))
+        plugin_zip_file = f"{item}-{plugin_info.get('version')}.zip"
         plugin_zip = os.path.join(dest_dir, plugin_zip_file)
 
         # Ensure all required data is present
         for value in ['id', 'name', 'author', 'version', 'tags', 'description']:
             if value not in plugin_info:
-                msg = "Plugin '{}' is missing required information '{}' in it's info.json file.".format(item, value)
+                msg = f"Plugin '{item}' is missing required information '{value}' in it's info.json file."
                 raise Exception(msg)
 
         # Print data variables for info
         print("  ------------------------------->")
-        print("  > Process plugin:  '{}'".format(plugin_info.get('name')))
-        print("    ID:               {}".format(plugin_info.get('id')))
-        print("    Author:           {}".format(plugin_info.get('author')))
-        print("    Version:          {}".format(plugin_info.get('version')))
-        print("    Tags:             {}".format(plugin_info.get('tags')))
-        print("    Description:      {}".format(plugin_info.get('description')))
+        print(f"  > Process plugin:  '{plugin_info.get('name')}'")
+        print(f"    ID:               {plugin_info.get('id')}")
+        print(f"    Author:           {plugin_info.get('author')}")
+        print(f"    Version:          {plugin_info.get('version')}")
+        print(f"    Tags:             {plugin_info.get('tags')}")
+        print(f"    Description:      {plugin_info.get('description')}")
         print()
 
         # Ensure that we are not overwriting a plugin that already exists with this version
         if os.path.exists(plugin_zip):
             print("")
-            print("  !WARNING! Repository already contains {}.".format(plugin_zip_file))
+            print(f"  !WARNING! Repository already contains {plugin_zip_file}.")
             print("  You will need to either:")
-            print("      - Remove the current file '{}'".format(plugin_zip))
+            print(f"      - Remove the current file '{plugin_zip}'")
             print("      OR")
             print("      - increase the plugin's version number if you wish to overwrite the current version.")
-            print("  Will not process plugin: '{}'".format(plugin_info.get('name')))
+            print(f"  Will not process plugin: '{plugin_info.get('name')}'")
             print()
             continue
 
@@ -89,18 +97,18 @@ for item in os.listdir(repo_source_path):
 
         # Copy plugin info.json to dest
         print('    Installing plugin metadata to repo...')
-        print('      - Copying: {} >>>> {}/info.json'.format(info_file, dest_dir))
+        print(f'      - Copying: {info_file} >>>> {dest_dir}/info.json')
         shutil.copy(info_file, dest_dir)
 
         # Add additional files (optional files)
         for file in glob.glob(os.path.join(item_path, '*changelog.txt')):
-            print('      - Copying: {} >>>> {}/changelog.txt'.format(file, dest_dir, plugin_info.get('version')))
+            print(f'      - Copying: {file} >>>> {dest_dir}/changelog.txt')
             shutil.copy(file, dest_dir)
         for file in glob.glob(os.path.join(item_path, '*icon.*')):
-            print('      - Copying: {} >>>> {}/icon.png'.format(file, dest_dir))
+            print(f'      - Copying: {file} >>>> {dest_dir}/icon.png')
             shutil.copy(file, dest_dir)
         for file in glob.glob(os.path.join(item_path, '*fanart.*')):
-            print('      - Copying: {} >>>> {}/fanart.jpg'.format(file, dest_dir))
+            print(f'      - Copying: {file} >>>> {dest_dir}/fanart.jpg')
             shutil.copy(file, dest_dir)
         print()
 
@@ -109,13 +117,15 @@ for item in os.listdir(repo_source_path):
         install_requirements(item_path)
 
         # Generate a zip file from the plugin contents
-        print("    Compressing {}...".format(plugin_zip))
+        print(f"    Compressing {plugin_zip}...")
         zip_file = zipfile.ZipFile(plugin_zip, 'w', zipfile.ZIP_DEFLATED)
         for root, dirs, files in os.walk(item_path):
             for file in files:
                 absname = os.path.abspath(os.path.join(root, file))
                 arcname = absname[len(item_path) + 1:]
-                print('      - Zipping: {} >>> {} | ({})'.format(os.path.join(root, file), arcname, plugin_zip))
+                print(
+                    f'      - Zipping: {os.path.join(root, file)} >>> {arcname} | ({plugin_zip})'
+                )
                 zip_file.write(os.path.join(root, file), arcname)
         zip_file.close()
 
@@ -148,7 +158,7 @@ with open(os.path.join(repo_source_path, 'repo.json')) as f:
 
 # Install repo_data to repo's plugins.json file
 print("  ------------------------------->")
-print("  > Writing repo plugin list to '{}'...".format(repo_json_file))
+print(f"  > Writing repo plugin list to '{repo_json_file}'...")
 with open(repo_json_file, 'w') as json_file:
     json.dump(repo_data, json_file, indent=4)
 
