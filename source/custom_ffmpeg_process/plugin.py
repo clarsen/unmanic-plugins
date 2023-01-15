@@ -85,14 +85,15 @@ def on_worker_process(data):
     system = System()
     system_info = system.info()
 
-    custom_string = settings.get_setting('Insert string into cache file name')
-    if custom_string:
+    if custom_string := settings.get_setting(
+        'Insert string into cache file name'
+    ):
         tmp_file_out = os.path.splitext(data['file_out'])
         data['file_out'] = "{}-{}-{}{}".format(tmp_file_out[0], custom_string, tmp_file_out[1])
 
     if not settings.get_setting('Execute Command'):
         data['exec_command'] = False
 
-        
+
 
     return data
