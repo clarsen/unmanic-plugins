@@ -7,7 +7,7 @@
     "description": "Ensure all video streams are encoded with the H264 codec using the libx264 encoder.  Also handle audio transcoding",
     "icon": "https://raw.githubusercontent.com/Josh5/unmanic.plugin.encoder_video_h264_libx264/master/icon.png",
     "id": "encoder_audio_video_h264_libx264",
-    "name": "Video Encoder H264 - libx264 (CPU)",
+    "name": "Audio/Video Encoder H264/AAC - libx264 (CPU)",
     "platform": [
         "all"
     ],

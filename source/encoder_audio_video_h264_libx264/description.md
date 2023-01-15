@@ -53,7 +53,7 @@ ffmpeg \
     -map 0:0 -map 0:1 \
     -c:v:0 libx264 \
     <CUSTOM VIDEO OPTIONS HERE> \
-    -c:a:0 copy \
+    -c:a:0 aac \
     -y /path/to/output/video.mkv 
 ```
 :::
